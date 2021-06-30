@@ -1,11 +1,14 @@
 package com.codepath.apps.restclienttemplate;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +20,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.parceler.Parcels;
 
 import java.lang.annotation.Target;
 import java.util.ArrayList;
@@ -27,6 +31,7 @@ import okhttp3.Headers;
 public class TimelineActivity extends AppCompatActivity {
 
     public static final String TAG = "TimelineActivity";
+    private final int REQUEST_CODE = 14;
 
     
     TwitterClient mClient;
@@ -88,10 +93,25 @@ public class TimelineActivity extends AppCompatActivity {
             // Compose icon has been selected
             // Navigate to the compose activity
             Intent i = new Intent(this, ComposeActivity.class);
-            startActivity(i);
+            startActivityForResult(i, REQUEST_CODE);
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            //Get data from intent (tweet)
+            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
+            //Update RV with new tweet
+            //Modify data source of tweets
+            mTweets.add(0,tweet);
+            //Update adapter
+            mAdapter.notifyItemInserted(0);
+            mRvTweets.smoothScrollToPosition(0);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onLogout(View view) {
