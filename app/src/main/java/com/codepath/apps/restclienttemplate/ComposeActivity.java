@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
 import org.parceler.Parcels;
@@ -26,6 +27,7 @@ public class ComposeActivity extends AppCompatActivity {
     EditText mEtCompose;
     Button mBtnTweet;
     TwitterClient mClient;
+    TextInputLayout mTxtInput;
 
 
     @Override
@@ -34,12 +36,11 @@ public class ComposeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_compose);
 
         mClient = TwitterApp.getRestClient(this);
-
         mEtCompose = findViewById(R.id.etCompose);
         mBtnTweet = findViewById(R.id.btnTweet);
+        mTxtInput = findViewById(R.id.tILayout);
 
         //Set click listener on button
-
         mBtnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,33 +53,41 @@ public class ComposeActivity extends AppCompatActivity {
                     Toast.makeText(ComposeActivity.this, "Sorry, your tweet is too long", Toast.LENGTH_LONG).show();
                     return;
                 }
-                Toast.makeText(ComposeActivity.this, tweetContent, Toast.LENGTH_LONG).show();
-                mClient.publishTweet(tweetContent, new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Headers headers, JSON json) {
-                        Log.i(TAG, "onSucces to publish tweet");
-                        try {
-                            Tweet tweet = Tweet.fromJson(json.jsonObject);
-                            Log.i(TAG, "Published tweet says: " + tweet.mBody);
-                            Intent i = new Intent();
-                            i.putExtra("tweet", Parcels.wrap(tweet));
-                            // set result code and bundle data for response
-                            setResult(RESULT_OK, i);
-                            //closes the activity, pass data to parent
-                            finish();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                Toast.makeText(ComposeActivity.this, tweetContent, Toast.LENGTH_LONG).show();
 
-                    @Override
-                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                        Log.e(TAG, "onFailure to publish tweeet", throwable);
-                    }
-                });
+                // Publish the tweet
+                publish(tweetContent);
             }
         });
 
-        // Make an API call to Twitter to publish the tweet
+        // Add Character Max Length to TextInputLayout
+        mTxtInput.setCounterMaxLength(MAX_TWEET_LEN);
+    }
+
+    // Make an API call to Twitter to publish the tweet
+    private void publish(String tweetContent) {
+        mClient.publishTweet(tweetContent, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                Log.i(TAG, "onSucces to publish tweet");
+                try {
+                    Tweet tweet = Tweet.fromJson(json.jsonObject);
+                    Log.i(TAG, "Published tweet says: " + tweet.mBody);
+                    Intent i = new Intent();
+                    i.putExtra("tweet", Parcels.wrap(tweet));
+                    // set result code and bundle data for response
+                    setResult(RESULT_OK, i);
+                    //closes the activity, pass data to parent
+                    finish();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.e(TAG, "onFailure to publish tweeet", throwable);
+            }
+        });
     }
 }
