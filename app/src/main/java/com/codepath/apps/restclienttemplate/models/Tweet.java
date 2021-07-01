@@ -32,7 +32,11 @@ public class Tweet {
         Tweet tweet = new Tweet();
         tweet.mUser = User.fromJson(jsonObject.getJSONObject("user"));
 //        this.userHandle = object.getString("user_username");
-        tweet.mBody = jsonObject.getString("text");
+        if(jsonObject.has("full_text")) {
+            tweet.mBody = jsonObject.getString("full_text");
+        } else {
+            tweet.mBody = jsonObject.getString("text");
+        }
         tweet.mCreatedAt = jsonObject.getString("created_at");
         JSONObject ent = jsonObject.getJSONObject("entities");
         //check if there exists embedded images
