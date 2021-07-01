@@ -23,7 +23,7 @@ public class Tweet {
     public String mBody;
     public String mCreatedAt;
     public User mUser;
-
+    public String mEmbeddedImgUrl;
     //empty constructor for Parceler
     public Tweet(){}
 
@@ -34,6 +34,13 @@ public class Tweet {
 //        this.userHandle = object.getString("user_username");
         tweet.mBody = jsonObject.getString("text");
         tweet.mCreatedAt = jsonObject.getString("created_at");
+        JSONObject ent = jsonObject.getJSONObject("entities");
+        //check if there exists embedded images
+        if (ent.has("media")) {
+            tweet.mEmbeddedImgUrl = ent.getJSONArray("media")
+                    .getJSONObject(0)
+                    .getString("media_url_https");
+        }
         return tweet;
     }
 

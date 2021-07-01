@@ -10,6 +10,7 @@ public class User {
     public String mScreenName;
     public String mPublicImageUrl;
 
+
     // empty constructor for Parceler
     public User(){}
 

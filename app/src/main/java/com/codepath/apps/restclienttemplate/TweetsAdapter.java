@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +24,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     @NotNull
 
     Context mContext;
-    List<Tweet> tweets;
+    List<Tweet> mTweets;
 
     // Pass in the context and the list of tweets
     public TweetsAdapter(@NonNull Context mContext, List<Tweet> tweets) {
         this.mContext = mContext;
-        this.tweets = tweets;
+        this.mTweets = tweets;
     }
     @Override
     // For each row, inflate the layout
@@ -42,14 +43,14 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
         // Get the data
-        Tweet tweet = tweets.get(position);
+        Tweet tweet = mTweets.get(position);
         // Bind the tweet with the view holder
         holder.bind(tweet);
     }
 
     @Override
     public int getItemCount() {
-        return tweets.size();
+        return mTweets.size();
     }
 
 
@@ -62,6 +63,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView mTvBody;
         TextView mTvScreenName;
         TextView mRelativeTimestamp;
+        ImageView mIvEmbedded;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -69,6 +71,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             mTvBody = itemView.findViewById(R.id.tvBody);
             mTvScreenName = itemView.findViewById(R.id.tvScreenName);
             mRelativeTimestamp = itemView.findViewById(R.id.tvRelativeT);
+            mIvEmbedded = itemView.findViewById(R.id.ivEmbedded);
         }
 
         public void bind(Tweet tweet) {
@@ -78,6 +81,22 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             Glide.with(mContext)
                     .load(tweet.mUser.mPublicImageUrl)
                     .into(mIvProfileImg);
+            Glide.with(mContext)
+                    .load(tweet.mEmbeddedImgUrl)
+                    .into(mIvEmbedded);
+//
         }
+    }
+
+    // Clean all elements of the recycler
+    public void clear() {
+        mTweets.clear();
+        notifyDataSetChanged();
+    }
+
+    // Add a list of items -- change to type used
+    public void addAll(List<Tweet> list) {
+        mTweets.addAll(list);
+        notifyDataSetChanged();
     }
 }
