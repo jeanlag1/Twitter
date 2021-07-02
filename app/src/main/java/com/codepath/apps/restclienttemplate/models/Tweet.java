@@ -24,14 +24,24 @@ public class Tweet {
     public String mCreatedAt;
     public User mUser;
     public String mEmbeddedImgUrl;
+    public int mRetweetCount;
+    public int mLikeCount;
+    public boolean mLiked;
+    public boolean mRetweeted;
+    public String mId;
+
     //empty constructor for Parceler
     public Tweet(){}
 
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
+        tweet.mLikeCount = jsonObject.getInt("favorite_count");
+        tweet.mRetweetCount = jsonObject.getInt("retweet_count");
         tweet.mUser = User.fromJson(jsonObject.getJSONObject("user"));
-//        this.userHandle = object.getString("user_username");
+        tweet.mLiked = jsonObject.getBoolean("favorited");
+        tweet.mRetweeted = jsonObject.getBoolean("retweeted");
+        tweet.mBody = jsonObject.getString("id_str");
         if(jsonObject.has("full_text")) {
             tweet.mBody = jsonObject.getString("full_text");
         } else {

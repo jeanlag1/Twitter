@@ -70,7 +70,7 @@ public class TimelineActivity extends AppCompatActivity {
         mRvTweets = findViewById(R.id.rvTweets);
         // Init the list of tweets and adapter
         mTweets = new ArrayList<>();
-        mAdapter = new TweetsAdapter(this, mTweets);
+        mAdapter = new TweetsAdapter(this, mTweets, mClient);
         // RV setup: Layout Manager and Adapter
         mRvTweets.setLayoutManager(new LinearLayoutManager(this));
         mRvTweets.setAdapter(mAdapter);
@@ -145,6 +145,15 @@ public class TimelineActivity extends AppCompatActivity {
             startActivityForResult(i, REQUEST_CODE);
             return true;
         }
+        if (item.getItemId() == R.id.logout) {
+            // Compose icon has been selected
+            // Navigate to the compose activity
+            // forget who's logged in
+            mClient.clearAccessToken();
+            finish();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -163,14 +172,4 @@ public class TimelineActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void onLogout(View view) {
-        // forget who's logged in
-        TwitterApp.getRestClient(this).clearAccessToken();
-
-        // navigate backwards to Login screen
-        Intent i = new Intent(this, LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // this makes sure the Back button won't work
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // same as above
-        startActivity(i);
-    }
 }
