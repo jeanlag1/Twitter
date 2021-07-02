@@ -46,10 +46,10 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='walkthrough1.gif ' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-<img src='walkthrough2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-<img src='walkthrough3.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-<img src='walkthrough4.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='walkthrough1.gif ' title='Video Walkthrough' width='300' alt='Video Walkthrough' />
+<img src='walkthrough2.gif' title='Video Walkthrough' width='300' alt='Video Walkthrough' />
+<img src='walkthrough3.gif' title='Video Walkthrough' width='300' alt='Video Walkthrough' />
+<img src='walkthrough4.gif' title='Video Walkthrough' width='300' alt='Video Walkthrough' />
 
 GIF created with [Kap](https://getkap.co/).
 
